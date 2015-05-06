@@ -45,6 +45,11 @@
 		//var
 		int acumula=0;
 		int linha,coluna,k,i,j;
+		int procs;
+		
+		//var tempo
+		struct timeb start, stop;
+		double elapsed;
 
 		
 		//cria matriz de saida
@@ -53,25 +58,37 @@
 		for (i=0;i<dimensao;i++) mat3[i] = (int *)malloc(dimensao*sizeof(int));
 		
 		
+		//contagem
+		ftime(&start);
+			
+		
 		//calcula
 		for (linha=0;linha<dimensao;linha++){
+			//procs=fork();
+			if (0==0){
 				for (coluna=0;coluna<dimensao;coluna++){
 						acumula=0; 
 						
 						for (k=0;k<dimensao;k++){
-								
 								acumula=acumula+mat1[k][coluna]*mat2[linha][k]; 
-								
 						} 
 						mat3[linha][coluna]=acumula; 
 						
 				} 
+			}
 		}
 		
+		ftime(&stop);
 		
 		
-		printf ("\nResultado:\n\n");
+		
+		
+		
+		/*printf ("\nResultado:\n\n");
 		imprime(mat3);
+		*/
+		elapsed=((double) stop.time + ((double) stop.millitm * 0.001)) - ((double) start.time + ((double) start.millitm * 0.001));
+		printf("\n -> O tempo de execucao e de %.3lf \n", elapsed);
 		
 	}
 	
@@ -117,13 +134,12 @@ int main(void){
 		
 
 		FILE *arq;
-		
-		struct timeb start, stop;
-		double elapsed;
+
 		
 		printf("\nQual a dimensao N (NxN) de suas matrizes?\n");
 		scanf("%i",&dimensao);
-		printf ("----\nO processo pai se chama: %i\n----\n",getpid());
+		printf("\nOK, dimensao = %i\n",dimensao);
+		//printf ("----\nO processo pai se chama: %i\n----\n",getpid());
 
 
 		//Cria matrizes a e b
@@ -138,22 +154,22 @@ int main(void){
 		preenche(matrizA,time(NULL));
 		preenche(matrizB,time(NULL)+1);
 		
+		/*
 		printf ("\nMatriz A:");
 		imprime(matrizA);
 		printf ("\nMatriz B:");
 		imprime(matrizB);
-		
+		*/
 		
 		//SUBPROCESSOS CALCULAM A MULTIPLICACAO
-		ftime(&start);
+		
 		versus(matrizA,matrizB);
-		ftime(&stop);
+		
 		
 		//gerasite(matrizA,matrizB);
-		
-		elapsed=((double) stop.time + ((double) stop.millitm * 0.001)) - ((double) start.time + ((double) start.millitm * 0.001));
+			
 	
-		printf("\n -> O tempo de execucao e de %.3lf \n", elapsed);
+		
 		printf("\n =============================================== \n");
 	
 		
