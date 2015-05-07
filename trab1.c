@@ -2,17 +2,21 @@
 #include	<wait.h>
 #include 	<stdlib.h>
 #include 	<time.h>
-#include	<sys/timeb.h>
 #include	<sys/types.h>
-#include 	<signal.h>
+#include	<sys/timeb.h>
+//#include </usr/include/bits/signum.h >
+#include <signal.h>
 #define BASE 100
+
+   	typedef struct {
+	   int **mat1;
+	   int **mat2;
+	   int **matrizResultado;
+	   int coluna;
+	   int linha;
+	   int thread;
+	} Calculos;
 	
-	typedef struct {
-      int linha;
-      int coluna;
-	  int valor;
-   } Elemento;
-   
 	//TAMANHO PRE-DEFINIDO
 	int dimensao;
 	int pai;
@@ -20,6 +24,20 @@
 	
 	//cria matriz de saida
 	int **matrizResultado;
+	
+	void calcula(Calculos c){
+			int acumula,k;
+	
+			acumula=0; 
+			/*
+			for (k=0;k<dimensao;k++){
+				acumula=acumula+c.mat1[k][c.coluna]*c.mat2[c.linha][k]; 	 
+			} 
+			c.matrizResultado[c.linha][c.coluna]=acumula;*/
+			printf("\nSou a t= %i e achei o valor %i",c.thread,acumula);
+			 
+			
+	}
 		
 	
 	void preenche(int **matriz,int semente){
@@ -55,60 +73,50 @@
 		//var
 		int acumula=0;
 		int linha,coluna,k,i,j;
-		int procs;
+		int rc,t;
+		Calculos args;
 		
 		
 		//var tempo
 		struct timeb start, stop;
 		double elapsed;
 
-		//pnt
-		int *point;
-		point=&temp;
 		
 		
-		//contagem do tempo
-		ftime(&start);
+		
 			
-		
-		//calcula
+		 //calcula
+		pthread_t threads[dimensao*dimensao]; 
+		args.mat1=mat1;
+		args.mat2=mat2;
+		args.matrizResultado=matrizResultado;
+		t=0;
+		ftime(&start); //inicia contagem do tempo
 		for (linha=0;linha<dimensao;linha++){
-			
+			args.linha=linha;
 			for (coluna=0;coluna<dimensao;coluna++){
-				
-				if (procs!=0){ //inicia filhos
-					procs=fork();
-				}
-				if (procs==0){ //filhos continuam
-				
-						acumula=0; 
+					args.coluna=coluna;
+					args.thread=t;
+					rc = pthread_create(&threads[t], NULL, calcula,args);
+					if (rc) { printf("ERROR code is %d\n", rc); exit(-1); }
+					t++;
 						
-						for (k=0;k<dimensao;k++){
-								acumula=acumula+mat1[k][coluna]*mat2[linha][k]; 
-						} 
-						matrizResultado[linha][coluna]=acumula;
-						*point=acumula; 
-						temp=acumula;
-						
-				}
 			}
 			
 		}
 		
-		//se for pai para processos
+		//recebe as threads
+		t=0;
 		for (linha=0;linha<dimensao;linha++){
 			for (coluna=0;coluna<dimensao;coluna++){
-				if( getpid() == pai ) {
-					wait(NULL);
-					printf ("\n 'Ola' (%i) -> %i , %i\n",getpid(),*point,temp);
-				}
-				else {
-					printf ("\n 'Oi pai' (%i)-> %i , %i\n",getpid(),*point,temp);
-					kill(getpid(), SIGKILL);
-				}
+				pthread_join(threads[t], NULL);
+				t++;
 			}
 		}
-		ftime(&stop);
+		
+
+		
+		ftime(&stop); //finaliza contagem do tempo
 		
 
 		printf ("\nResultado:\n\n");
@@ -166,8 +174,8 @@ int main(void){
 		printf("\nQual a dimensao N (NxN) de suas matrizes?\n");
 		scanf("%i",&dimensao);
 		printf("\nOK, dimensao = %i\n",dimensao);
-		pai=getpid();
-		printf ("\nO processo pai se chama: %i\n",pai);
+
+
 
 
 		//Cria matrizes 
@@ -197,7 +205,7 @@ int main(void){
 		multiplica(matrizA,matrizB);
 		
 		//gera link
-		gerasite(matrizA,matrizB);
+		//gerasite(matrizA,matrizB);
 			
 		
 		printf("\n =============================================== \n");
