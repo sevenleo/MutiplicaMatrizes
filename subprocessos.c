@@ -16,10 +16,10 @@
 	//TAMANHO PRE-DEFINIDO
 	int dimensao;
 	int pai;
-	int temp=0;
 	
 	//cria matriz de saida
 	int **matrizResultado;
+	int acumula;
 		
 	
 	void preenche(int **matriz,int semente){
@@ -53,19 +53,15 @@
 	
 	void multiplica(int **mat1,int **mat2){
 		//var
-		int acumula=0;
+		//int acumula=0;
 		int linha,coluna,k,i,j;
-		int procs;
-		
+		int pid=getpid();
+		int countsp=0; //conta subprocessos
 		
 		//var tempo
 		struct timeb start, stop;
 		double elapsed;
 
-		//pnt
-		int *point;
-		point=&temp;
-		
 		
 		//contagem do tempo
 		ftime(&start);
@@ -76,38 +72,49 @@
 			
 			for (coluna=0;coluna<dimensao;coluna++){
 				
-				if (procs!=0){ //inicia filhos
-					procs=fork();
+				if (pid!=0){ //inicia filhos
+					countsp++;
+					printf("\n*****pai(%i) p=%i\n",getpid(),countsp);
+					pid=fork();
 				}
-				if (procs==0){ //filhos continuam
+				if (pid==0){ //filhos continuam
 				
 						acumula=0; 
 						
 						for (k=0;k<dimensao;k++){
-								acumula=acumula+mat1[k][coluna]*mat2[linha][k]; 
+								acumula=acumula+mat1[k][coluna]*mat2[linha][k];
+								
 						} 
 						matrizResultado[linha][coluna]=acumula;
-						*point=acumula; 
-						temp=acumula;
+						if (pid==0) printf("\n*********filho(%i) p=%i achei %i\n",getpid(),countsp,acumula);
+
 						
 				}
+
+				
+
 			}
 			
 		}
 		
+		if (pid!=0) for (k=1;k<countsp;k++) wait(NULL);
+		else kill(getpid(), SIGKILL);
+		
+		
+		/*
 		//se for pai para processos
 		for (linha=0;linha<dimensao;linha++){
 			for (coluna=0;coluna<dimensao;coluna++){
 				if( getpid() == pai ) {
 					wait(NULL);
-					printf ("\n 'Ola' (%i) -> %i , %i\n",getpid(),*point,temp);
+					//printf ("\n 'Ola' (%i)\n",getpid());
 				}
 				else {
-					printf ("\n 'Oi pai' (%i)-> %i , %i\n",getpid(),*point,temp);
+					//printf ("\n 'Oi pai' (%i)\n",getpid());
 					kill(getpid(), SIGKILL);
 				}
 			}
-		}
+		}*/
 		ftime(&stop);
 		
 
@@ -164,7 +171,8 @@ int main(void){
 
 		
 		printf("\nQual a dimensao N (NxN) de suas matrizes?\n");
-		scanf("%i",&dimensao);
+		scanf("%i",&dimensao); 
+		//dimensao=2;
 		printf("\nOK, dimensao = %i\n",dimensao);
 		pai=getpid();
 		printf ("\nO processo pai se chama: %i\n",pai);
@@ -185,12 +193,12 @@ int main(void){
 		preenche(matrizA,time(NULL));
 		preenche(matrizB,time(NULL)+1);
 		
-		/*
+		
 		printf ("\nMatriz A:");
 		imprime(matrizA);
 		printf ("\nMatriz B:");
 		imprime(matrizB);
-		*/
+		
 		
 		
 		//SUBPROCESSOS CALCULAM A MULTIPLICACAO

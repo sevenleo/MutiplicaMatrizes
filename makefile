@@ -6,7 +6,7 @@ all:
 	@gcc subprocessos.c -o subprocessos 
 	@gcc threads.c -o threads -lpthread
 	@echo ____________________________________________________________________Executa
-	@./teste 
+	@./subprocessos 
 
 clean: 
 	rm a.out 
