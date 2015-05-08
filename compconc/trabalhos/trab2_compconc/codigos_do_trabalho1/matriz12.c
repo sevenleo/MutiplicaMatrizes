@@ -68,10 +68,10 @@
 					if(id3!=0)
 					  id2=fork();
 					  if(id2==0) {
+						  printf("--");
 					      x=0;
 					      for (i=0;i<colunas;i++) {
-						x=x+(matriz[i][j]*matriz[j][i]);
-						
+							x=x+(matriz[i][j]*matriz[j][i]);
 					      }
 					      id3 = 0;
 					      arq2 = fopen("dados.txt", "a");
