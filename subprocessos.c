@@ -10,6 +10,12 @@
 #include <signal.h>
 #define BASE 100
 
+typedef struct {
+      int linha;
+      int coluna;
+	  int valor;
+} Elemento;
+
 //PRE-DEFINIDOS
 int dimensao;
 int pai;
@@ -26,7 +32,7 @@ pid_t gettid( void ) ;
 void gerasite(int **matrizA,int **matrizB);
 void preenche(int **matriz,int semente);
 void imprime (int **matriz);
-void calcula (int t);
+Elemento calcula (int t);
 void multiplica(int **mat1,int **mat2);
 
 
@@ -147,7 +153,8 @@ void gerasite(int **matrizA,int **matrizB){
 			printf ("}'\n");
 }
 	
-void calcula(int t){
+Elemento calcula(int t){
+		Elemento resposta;
 		int linha,coluna,acumula,k;
 		linha=(int)(t/dimensao);
 		coluna=t%dimensao;
@@ -155,10 +162,16 @@ void calcula(int t){
 		for (k=0;k<dimensao;k++){
 								acumula=acumula+matrizA[k][coluna]*matrizB[linha][k]; 
 		} 
-		matrizResultado[linha][coluna]=acumula;
+		//matrizResultado[linha][coluna]=acumula;
+		
+		resposta.coluna=coluna;
+		resposta.linha=linha;
+		resposta.valor=acumula;
 		
 		printf("\n ## Sub=%i PID=%i Encontrou=%i para a posicao [%i,%i]",t,(int)getpid(),acumula,linha,coluna);
-		exit(0);
+		return resposta;
+		//exit(0);
+		
 }
 
 void multiplica(int **mat1,int **mat2){
@@ -166,18 +179,37 @@ void multiplica(int **mat1,int **mat2){
 		int i,rc,acumula;
 		int dimensao2=dimensao*dimensao;
 		int id=1;
+		Elemento x;
+		FILE *arq;
+		arq = fopen("dadossubprocessos.txt", "w+");
+		fclose (arq);
 		
 		for (i=0;i<dimensao2;i++){
 			if (id!=0){
 				id=fork();
 			}
 			if (id==0){
-				calcula(i);
+				x=calcula(i);
+				arq = fopen("dadossubprocessos.txt", "a");
+				fprintf(arq,"%i %i \t%i\n", x.linha,x.coluna,x.valor);
+				fclose (arq);
+				exit(0);
 			}
 			
 		}
 		
 		if( id != 0 ) for (i=0;i<dimensao2;i++) wait();
 		else kill(getpid(), SIGKILL);
-
+		
+		//soh o pai acessa essa area de Codigo, os filhos ja retornaram ou morreram
+		arq=fopen("dadossubprocessos.txt","r");
+		if (arq == NULL) {
+			printf ("Houve um erro ao abrir o arquivo.\n");
+			exit(-1);
+		}
+		for (i=0;i<dimensao2;i++){
+			fscanf(arq,"%i %i %i", &x.linha,&x.coluna,&x.valor);
+			//printf("%i %i \t%i\n", x.linha,x.coluna,x.valor);
+			matrizResultado[x.linha][x.coluna]=x.valor;
+		}
 }
