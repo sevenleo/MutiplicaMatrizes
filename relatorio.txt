@@ -3,34 +3,34 @@
 
 [ProcessoUnico] Matrizes = 10 x 10 -> O tempo de execucao e de 0.000
 
-[ProcessoUnico] Matrizes = 50 x 50 -> O tempo de execucao e de 0.001
+[ProcessoUnico] Matrizes = 50 x 50 -> O tempo de execucao e de 0.002
 
-[ProcessoUnico] Matrizes = 100 x 100 -> O tempo de execucao e de 0.013
+[ProcessoUnico] Matrizes = 100 x 100 -> O tempo de execucao e de 0.008
 
 [ProcessoUnico] Matrizes = 200 x 200 -> O tempo de execucao e de 0.061
 
-[ProcessoUnico] Matrizes = 500 x 500 -> O tempo de execucao e de 1.155
+[ProcessoUnico] Matrizes = 500 x 500 -> O tempo de execucao e de 1.164
 
-[Subprocessos=3] Matrizes = 3 x 3 -> O tempo de execucao e de 0.001
+[Subprocessos=3] Matrizes = 3 x 3 -> O tempo de execucao e de 0.002
 
-[Subprocessos=10] Matrizes = 10 x 10 -> O tempo de execucao e de 0.002
+[Subprocessos=10] Matrizes = 10 x 10 -> O tempo de execucao e de 0.003
 
-[Subprocessos=50] Matrizes = 50 x 50 -> O tempo de execucao e de 0.037
+[Subprocessos=50] Matrizes = 50 x 50 -> O tempo de execucao e de 0.034
 
-[Subprocessos=100] Matrizes = 100 x 100 -> O tempo de execucao e de 0.134
+[Subprocessos=100] Matrizes = 100 x 100 -> O tempo de execucao e de 0.138
 
-[Subprocessos=200] Matrizes = 200 x 200 -> O tempo de execucao e de 0.570
+[Subprocessos=200] Matrizes = 200 x 200 -> O tempo de execucao e de 0.533
 
-[Subprocessos=500] Matrizes = 500 x 500 -> O tempo de execucao e de 5.369
+[Subprocessos=500] Matrizes = 500 x 500 -> O tempo de execucao e de 5.126
 
 [Threads=3] Matrizes = 3 x 3 -> O tempo de execucao e de 0.000
 
 [Threads=10] Matrizes = 10 x 10 -> O tempo de execucao e de 0.000
 
-[Threads=50] Matrizes = 50 x 50 -> O tempo de execucao e de 0.003
+[Threads=50] Matrizes = 50 x 50 -> O tempo de execucao e de 0.023
 
-[Threads=100] Matrizes = 100 x 100 -> O tempo de execucao e de 0.010
+[Threads=100] Matrizes = 100 x 100 -> O tempo de execucao e de 0.016
 
-[Threads=200] Matrizes = 200 x 200 -> O tempo de execucao e de 0.058
+[Threads=200] Matrizes = 200 x 200 -> O tempo de execucao e de 0.093
 
-[Threads=500] Matrizes = 500 x 500 -> O tempo de execucao e de 1.085
+[Threads=500] Matrizes = 500 x 500 -> O tempo de execucao e de 1.062

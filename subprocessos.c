@@ -1,7 +1,6 @@
 //Leonardo Neves da Silva DRE110155777 
 //T1 SO 2015.1 ProfValeria
 
-#include <sys/syscall.h>
 #include	<stdio.h>
 #include 	<stdlib.h>
 #include 	<time.h>
