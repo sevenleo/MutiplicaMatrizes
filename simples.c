@@ -1,18 +1,108 @@
+//Leonardo Neves da Silva DRE110155777 
+//T1 SO 2015.1 ProfValeria
+
+#include <sys/syscall.h>
 #include	<stdio.h>
-#include	<wait.h>
 #include 	<stdlib.h>
 #include 	<time.h>
 #include	<sys/timeb.h>
-#include	<sys/types.h>
-#include 	<signal.h>
+#include <signal.h>
 #define BASE 100
 
-	//TAMANHO PRE-DEFINIDO
-	int dimensao;
+//parametros
+typedef struct  {
+   int **mat1;
+   int **mat2;
+   int coluna;
+   int linha;
+   int thread;
+} Calculos ;
+
+
+//PRE-DEFINIDOS
+int dimensao;
+int pai;
+int temp=0;
+
+
+//cria matrizes
+int **matrizA;
+int **matrizB;
+int **matrizResultado;
+
+//funcoes
+pid_t gettid( void ) ;
+void gerasite(int **matrizA,int **matrizB);
+void preenche(int **matriz,int semente);
+void imprime (int **matriz);
+void* calcula(void* arg);
+void multiplica(int **mat1,int **mat2);
+
+
+//////////////////////////////////////////////////////
 	
-	
-	
-	void preenche(int **matriz,int semente){
+int main(void){
+		
+		//variaveis de tempo
+		struct timeb start, stop;
+		double elapsed;
+
+
+		int i;
+		printf("\nQual a dimensao N (NxN) de suas matrizes?\n");
+		scanf("%i",&dimensao);
+		printf("\nOK, dimensao = %i\n",dimensao);
+
+
+		//Cria matrizes 
+		if (dimensao==0 || dimensao==0 ) return -1;
+		matrizA = (int **)malloc(dimensao*sizeof(int *));
+		matrizB = (int **)malloc(dimensao*sizeof(int *));
+		matrizResultado = (int **)malloc(dimensao*sizeof(int *));
+		for (i=0;i<dimensao;i++) matrizA[i] = (int *)malloc(dimensao*sizeof(int));
+		for (i=0;i<dimensao;i++) matrizB[i] = (int *)malloc(dimensao*sizeof(int));
+		for (i=0;i<dimensao;i++) matrizResultado[i] = (int *)malloc(dimensao*sizeof(int));
+
+
+		//PREENCHE MATRIZ 
+		preenche(matrizA,time(NULL));
+		preenche(matrizB,time(NULL)+1);
+		
+		//THREADS CALCULAM A MULTIPLICACAO
+		ftime(&start);					//inicia timer
+		multiplica(matrizA,matrizB);
+		ftime(&stop);					//para timer
+		elapsed=((double) stop.time + ((double) stop.millitm * 0.001)) - ((double) start.time + ((double) start.millitm * 0.001));
+		
+		//IMPRIME
+		printf ("\nMatriz A:");
+		imprime(matrizA);
+		printf ("\nMatriz B:");
+		imprime(matrizB);
+		printf ("\n-Resultado:");
+		imprime(matrizResultado);
+		
+		//gera link
+		gerasite(matrizA,matrizB);
+		
+		printf("\n -> O tempo de execucao e de %.3lf \n", elapsed);
+
+			
+
+		printf("\n =============================================== \n");
+
+		//exit(0);
+		return 0;
+}
+
+//////////////////////////////////////////////////////
+
+
+pid_t gettid( void ) { 
+		return syscall( __NR_gettid );
+}
+
+void preenche(int **matriz,int semente){
 	   int i,j,temp;
 	    srand(semente);
 	    
@@ -26,7 +116,7 @@
 		}
    }
 
-	void imprime (int **matriz){
+void imprime (int **matriz){
 		int i,j;
 		printf ("\n");
 		for (j=0;j<dimensao;j++) {
@@ -37,63 +127,9 @@
 		}
 		
 		
-	}
-	
+}
 
-
-	void versus(int **mat1,int **mat2){
-		//var
-		int acumula=0;
-		int linha,coluna,k,i,j;
-		int procs;
-		
-		//var tempo
-		struct timeb start, stop;
-		double elapsed;
-
-		
-		//cria matriz de saida
-		int **mat3;
-		mat3 = (int **)malloc(dimensao*sizeof(int *));
-		for (i=0;i<dimensao;i++) mat3[i] = (int *)malloc(dimensao*sizeof(int));
-		
-		
-		//contagem
-		ftime(&start);
-			
-		
-		//calcula
-		for (linha=0;linha<dimensao;linha++){
-			//procs=fork();
-			if (0==0){
-				for (coluna=0;coluna<dimensao;coluna++){
-						acumula=0; 
-						
-						for (k=0;k<dimensao;k++){
-								acumula=acumula+mat1[k][coluna]*mat2[linha][k]; 
-						} 
-						mat3[linha][coluna]=acumula; 
-						
-				} 
-			}
-		}
-		
-		ftime(&stop);
-		
-		
-		
-		
-		
-		/*printf ("\nResultado:\n\n");
-		imprime(mat3);
-		*/
-		elapsed=((double) stop.time + ((double) stop.millitm * 0.001)) - ((double) start.time + ((double) start.millitm * 0.001));
-		printf("\n -> O tempo de execucao e de %.3lf \n", elapsed);
-		
-	}
-	
-	
-	void gerasite(int **matrizA,int **matrizB){
+void gerasite(int **matrizA,int **matrizB){
 			int i,j;
 			
 			printf ("\n  google-chrome ' http://www.wolframalpha.com/input/?i=");
@@ -122,62 +158,28 @@
 				else printf ("},");
 			}
 			printf ("}'\n");
-		}
-   
-   
-   
-int main(void){
-	
-		int **matrizA;
-		int **matrizB;
-		int i=0,j=0,temp,x;
-		
-
-		FILE *arq;
-
-		
-		printf("\nQual a dimensao N (NxN) de suas matrizes?\n");
-		scanf("%i",&dimensao);
-		printf("\nOK, dimensao = %i\n",dimensao);
-		//printf ("----\nO processo pai se chama: %i\n----\n",getpid());
-
-
-		//Cria matrizes a e b
-		
-		if (dimensao==0 || dimensao==0 ) return -1;
-		matrizA = (int **)malloc(dimensao*sizeof(int *));
-		matrizB = (int **)malloc(dimensao*sizeof(int *));
-		for (i=0;i<dimensao;i++) matrizA[i] = (int *)malloc(dimensao*sizeof(int));
-		for (i=0;i<dimensao;i++) matrizB[i] = (int *)malloc(dimensao*sizeof(int));
-
-		//PREENCHE MATRIZ 
-		preenche(matrizA,time(NULL));
-		preenche(matrizB,time(NULL)+1);
-		
-		/*
-		printf ("\nMatriz A:");
-		imprime(matrizA);
-		printf ("\nMatriz B:");
-		imprime(matrizB);
-		*/
-		
-		//SUBPROCESSOS CALCULAM A MULTIPLICACAO
-		
-		versus(matrizA,matrizB);
-		
-		
-		//gerasite(matrizA,matrizB);
-			
-	
-		
-		printf("\n =============================================== \n");
-	
-		
-		
-		
-		
-    //exit(0);
-	return 0;
 }
 
+	
+void* calcula(void* arg){
+		int t = (int)arg;
+		int linha,coluna,acumula,k;
+		linha=t;
+		for (coluna=0;coluna<dimensao;coluna++){
+			acumula=0;
+			for (k=0;k<dimensao;k++){
+						acumula=acumula+matrizA[k][coluna]*matrizB[linha][k]; 
+			} 
+			matrizResultado[linha][coluna]=acumula;
+		}
+}
 
+void multiplica(int **mat1,int **mat2){
+	
+		int i,rc,acumula;
+		pthread_t th[dimensao];
+		
+		for (i=0;i<dimensao;i++){
+			calcula(i);
+		}
+}

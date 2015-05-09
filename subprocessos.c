@@ -1,11 +1,10 @@
-//#include <linux/unistd.h>
+//Leonardo Neves da Silva DRE110155777 
+//T1 SO 2015.1 ProfValeria
+
 #include <sys/syscall.h>
-//#include <unistd.h>
 #include	<stdio.h>
-//#include	<wait.h>
 #include 	<stdlib.h>
 #include 	<time.h>
-//#include	<sys/types.h>
 #include	<sys/timeb.h>
 #include <signal.h>
 #define BASE 100
