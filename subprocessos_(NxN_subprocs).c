@@ -7,19 +7,14 @@
 #include 	<time.h>
 //#include	<sys/types.h>
 #include	<sys/timeb.h>
-
 #include <signal.h>
 #define BASE 100
 
-//parametros
-typedef struct  {
-   int **mat1;
-   int **mat2;
-   int coluna;
-   int linha;
-   int thread;
-} Calculos ;
-
+typedef struct {
+      int linha;
+      int coluna;
+	  int valor;
+} Elemento;
 
 //PRE-DEFINIDOS
 int dimensao;
@@ -37,7 +32,7 @@ pid_t gettid( void ) ;
 void gerasite(int **matrizA,int **matrizB);
 void preenche(int **matriz,int semente);
 void imprime (int **matriz);
-void* calcula(void* arg);
+Elemento calcula (int t);
 void multiplica(int **mat1,int **mat2);
 
 
@@ -100,10 +95,6 @@ int main(void){
 //////////////////////////////////////////////////////
 
 
-pid_t gettid( void ) { 
-		return syscall( __NR_gettid );
-}
-
 void preenche(int **matriz,int semente){
 	   int i,j,temp;
 	    srand(semente);
@@ -161,39 +152,64 @@ void gerasite(int **matrizA,int **matrizB){
 			}
 			printf ("}'\n");
 }
-
 	
-void* calcula(void* arg){
-		int t = (int)arg;
+Elemento calcula(int t){
+		Elemento resposta;
 		int linha,coluna,acumula,k;
-		linha=t;
-		for (coluna=0;coluna<dimensao;coluna++){
-			acumula=0;
-			for (k=0;k<dimensao;k++){
-						acumula=acumula+matrizA[k][coluna]*matrizB[linha][k]; 
-			} 
-			matrizResultado[linha][coluna]=acumula;
-			
-			
-			printf("\n ## Thread=%i TID=%i Calculou=%i para a posicao [%i,%i]",t,(int)gettid(),acumula,coluna,linha);
-		}
+		linha=(int)(t/dimensao);
+		coluna=t%dimensao;
+		acumula=0;
+		for (k=0;k<dimensao;k++){
+								acumula=acumula+matrizA[k][coluna]*matrizB[linha][k]; 
+		} 
+		//matrizResultado[linha][coluna]=acumula;
+		
+		resposta.coluna=coluna;
+		resposta.linha=linha;
+		resposta.valor=acumula;
+		
+		printf("\n ## Sub=%i PID=%i Encontrou=%i para a posicao [%i,%i]",t,(int)getpid(),acumula,linha,coluna);
+		return resposta;
+		//exit(0);
+		
 }
 
 void multiplica(int **mat1,int **mat2){
 	
 		int i,rc,acumula;
-		pthread_t th[dimensao];
+		int dimensao2=dimensao*dimensao;
+		int id=1;
+		Elemento x;
+		FILE *arq;
+		arq = fopen("dadossubprocessos.txt", "w+");
+		fclose (arq);
 		
-		for (i=0;i<dimensao;i++){
-			rc = pthread_create(&th[i], NULL, calcula,(void*)i);
-			if (rc) { printf("ERROR code is %d\n", rc); exit(-1); }
+		for (i=0;i<dimensao2;i++){
+			if (id!=0){
+				id=fork();
+			}
+			if (id==0){
+				x=calcula(i);
+				arq = fopen("dadossubprocessos.txt", "a");
+				fprintf(arq,"%i %i \t%i\n", x.linha,x.coluna,x.valor);
+				fclose (arq);
+				exit(0);
+			}
+			
 		}
 		
-		for (i=0;i<dimensao;i++){
-			if (pthread_join(th[i], NULL)) {
-				  printf("---------------ERRO: pthread_join() ERRO NA THREAD=%i\n",i); exit(-1); 
-			  } 
-		}
+		if( id != 0 ) for (i=0;i<dimensao2;i++) wait();
+		else kill(getpid(), SIGKILL);
 		
-
+		//soh o pai acessa essa area de Codigo, os filhos ja retornaram ou morreram
+		arq=fopen("dadossubprocessos.txt","r");
+		if (arq == NULL) {
+			printf ("Houve um erro ao abrir o arquivo.\n");
+			exit(-1);
+		}
+		for (i=0;i<dimensao2;i++){
+			fscanf(arq,"%i %i %i", &x.linha,&x.coluna,&x.valor);
+			//printf("%i %i \t%i\n", x.linha,x.coluna,x.valor);
+			matrizResultado[x.linha][x.coluna]=x.valor;
+		}
 }

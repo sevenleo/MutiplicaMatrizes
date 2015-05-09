@@ -164,32 +164,35 @@ void gerasite(int **matrizA,int **matrizB){
 
 	
 void* calcula(void* arg){
+		//Calculos* args = (Calculos*) arg;
 		int t = (int)arg;
 		int linha,coluna,acumula,k;
-		linha=t;
-		for (coluna=0;coluna<dimensao;coluna++){
-			acumula=0;
-			for (k=0;k<dimensao;k++){
-						acumula=acumula+matrizA[k][coluna]*matrizB[linha][k]; 
-			} 
-			matrizResultado[linha][coluna]=acumula;
-			
-			
-			printf("\n ## Thread=%i TID=%i Calculou=%i para a posicao [%i,%i]",t,(int)gettid(),acumula,coluna,linha);
-		}
+		linha=(int)(t/dimensao);
+		coluna=t%dimensao;
+		acumula=0;
+		for (k=0;k<dimensao;k++){
+								acumula=acumula+matrizA[k][coluna]*matrizB[linha][k]; 
+		} 
+		matrizResultado[linha][coluna]=acumula;
+		
+		
+		printf("\n ## Thread=%i TID=%i Calculou=%i para a posicao [%i,%i]",t,(int)gettid(),acumula,coluna,linha);
+
 }
 
 void multiplica(int **mat1,int **mat2){
 	
 		int i,rc,acumula;
-		pthread_t th[dimensao];
+		int dimensao2=dimensao*dimensao;
+		int t=2;
+		pthread_t th[dimensao2];
 		
-		for (i=0;i<dimensao;i++){
+		for (i=0;i<dimensao2;i++){
 			rc = pthread_create(&th[i], NULL, calcula,(void*)i);
 			if (rc) { printf("ERROR code is %d\n", rc); exit(-1); }
 		}
 		
-		for (i=0;i<dimensao;i++){
+		for (i=0;i<dimensao2;i++){
 			if (pthread_join(th[i], NULL)) {
 				  printf("---------------ERRO: pthread_join() ERRO NA THREAD=%i\n",i); exit(-1); 
 			  } 

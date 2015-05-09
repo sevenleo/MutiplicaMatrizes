@@ -154,21 +154,28 @@ void gerasite(int **matrizA,int **matrizB){
 }
 	
 Elemento calcula(int t){
+		FILE *arq;
 		Elemento resposta;
 		int linha,coluna,acumula,k;
-		linha=(int)(t/dimensao);
-		coluna=t%dimensao;
-		acumula=0;
-		for (k=0;k<dimensao;k++){
+		linha=t;
+		for (coluna=0;coluna<dimensao;coluna++){
+				acumula=0;
+				for (k=0;k<dimensao;k++){
 								acumula=acumula+matrizA[k][coluna]*matrizB[linha][k]; 
-		} 
-		//matrizResultado[linha][coluna]=acumula;
-		
-		resposta.coluna=coluna;
-		resposta.linha=linha;
-		resposta.valor=acumula;
-		
-		printf("\n ## Sub=%i PID=%i Encontrou=%i para a posicao [%i,%i]",t,(int)getpid(),acumula,linha,coluna);
+				} 
+				//matrizResultado[linha][coluna]=acumula;
+				
+				resposta.coluna=coluna;
+				resposta.linha=linha;
+				resposta.valor=acumula;
+				
+				printf("\n ## Sub=%i PID=%i Encontrou=%i para a posicao [%i,%i]",t,(int)getpid(),acumula,linha,coluna);
+				arq = fopen("dadossubprocessos.txt", "a");
+				fprintf(arq,"%i %i \t%i\n", resposta.linha,resposta.coluna,resposta.valor);
+				fclose (arq);
+				
+		}
+		exit(0);
 		return resposta;
 		//exit(0);
 		
@@ -184,16 +191,13 @@ void multiplica(int **mat1,int **mat2){
 		arq = fopen("dadossubprocessos.txt", "w+");
 		fclose (arq);
 		
-		for (i=0;i<dimensao2;i++){
+		for (i=0;i<dimensao;i++){
 			if (id!=0){
 				id=fork();
 			}
 			if (id==0){
 				x=calcula(i);
-				arq = fopen("dadossubprocessos.txt", "a");
-				fprintf(arq,"%i %i \t%i\n", x.linha,x.coluna,x.valor);
-				fclose (arq);
-				exit(0);
+				
 			}
 			
 		}
