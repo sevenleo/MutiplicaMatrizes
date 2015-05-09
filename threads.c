@@ -1,14 +1,13 @@
-#include <linux/unistd.h>
+//#include <linux/unistd.h>
 #include <sys/syscall.h>
-#include <unistd.h>
-
+//#include <unistd.h>
 #include	<stdio.h>
-#include	<wait.h>
+//#include	<wait.h>
 #include 	<stdlib.h>
 #include 	<time.h>
-#include	<sys/types.h>
+//#include	<sys/types.h>
 #include	<sys/timeb.h>
-//#include </usr/include/bits/signum.h >
+
 #include <signal.h>
 #define BASE 100
 
