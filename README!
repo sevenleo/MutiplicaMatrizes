@@ -1,0 +1,18 @@
+Multiplicacao de matrizes
+============================================================
+
+simples.c 		= monoprocessado
+subprocessos.c 	= um subprocesso para cada celula
+threads.c 		= uma thread para o calculo de cada thread
+
+============================================================
+
+Sistemas Operacionas - Ciencia da Computação
+Professora Valéria - 2015.1
+
+============================================================
+
+Autor/estudante/bacharelando:
+Leonardo Neves da Silva
+
+
