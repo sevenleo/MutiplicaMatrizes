@@ -41,7 +41,7 @@ void multiplica(int **mat1,int **mat2);
 
 //////////////////////////////////////////////////////
 	
-int main(void){
+int main( int argc, char *argv[ ] ){
 		
 		//variaveis de tempo
 		struct timeb start, stop;
@@ -49,13 +49,17 @@ int main(void){
 
 
 		int i;
-		printf("\nQual a dimensao N (NxN) de suas matrizes?\n");
-		scanf("%i",&dimensao);
-		printf("\nOK, dimensao = %i\n",dimensao);
+		if (argc > 1 ) {
+			dimensao = atoi(argv[1]);
+		}
+		else {
+			printf("\nQual a dimensao N (NxN) de suas matrizes?\n");
+			scanf("%i",&dimensao);
+		}
 
 
 		//Cria matrizes 
-		if (dimensao==0 || dimensao==0 ) return -1;
+		if (dimensao<=0 ) return -1;
 		matrizA = (int **)malloc(dimensao*sizeof(int *));
 		matrizB = (int **)malloc(dimensao*sizeof(int *));
 		matrizResultado = (int **)malloc(dimensao*sizeof(int *));
@@ -75,7 +79,7 @@ int main(void){
 		elapsed=((double) stop.time + ((double) stop.millitm * 0.001)) - ((double) start.time + ((double) start.millitm * 0.001));
 		
 		//IMPRIME
-		printf ("\nMatriz A:");
+		/*printf ("\nMatriz A:");
 		imprime(matrizA);
 		printf ("\nMatriz B:");
 		imprime(matrizB);
@@ -84,13 +88,10 @@ int main(void){
 		
 		//gera link
 		gerasite(matrizA,matrizB);
+		*/
+				printf("\n[Threads=%i] Matrizes = %i x %i -> O tempo de execucao e de %.3lf\n",dimensao, dimensao, dimensao,elapsed);
+
 		
-		printf("\n -> O tempo de execucao e de %.3lf \n", elapsed);
-
-			
-
-		printf("\n =============================================== \n");
-
 		//exit(0);
 		return 0;
 }
@@ -173,7 +174,7 @@ void* calcula(void* arg){
 			matrizResultado[linha][coluna]=acumula;
 			
 			
-			printf("\n ## Thread=%i TID=%i Calculou=%i para a posicao [%i,%i]",t,(int)gettid(),acumula,coluna,linha);
+			//printf("\n ## Thread=%i TID=%i Calculou=%i para a posicao [%i,%i]",t,(int)gettid(),acumula,coluna,linha);
 		}
 }
 

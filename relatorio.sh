@@ -1,0 +1,19 @@
+./simples	3
+./simples	10
+./simples	50
+./simples	100
+./simples	200
+./simples	500
+./subprocessos	3
+./subprocessos	10
+./subprocessos	50
+./subprocessos	100
+./subprocessos	200
+./subprocessos	500
+./threads	3
+./threads	10
+./threads	50
+./threads	100
+./threads	200
+./threads	500
+
