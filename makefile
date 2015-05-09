@@ -6,7 +6,7 @@ all:
 	@gcc subprocessos.c -o subprocessos 
 	@gcc threads.c -o threads -lpthread
 	@echo ____________________________________________________________________Executa
-	@./subprocessos
+	@Execute ./subprocessos ou./threads ou ./simples
 	
 
 clean: 
