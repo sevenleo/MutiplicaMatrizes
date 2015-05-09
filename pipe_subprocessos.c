@@ -180,40 +180,40 @@ Elemento calcula(int t){
 
 void multiplica(int **mat1,int **mat2){
 	
-		int i,rc,acumula;
+		int linha,coluna,rc,acumula;
 		int dimensao2=dimensao*dimensao;
 		int id=1;
 		int n=0;
 		Elemento x;
-		int fd[2];
+		int fd[dimensao][2];
 			if (pipe(fd)){                         /* create pipe            */
 			fprintf(stderr, "pipe error\n");
 			exit(-1);
 		}
-		for (i=0;i<dimensao;i++){
+		for (linha=0;linha<dimensao;linha++){
 			if (id!=0){
 				id=fork();
 			}
 			if (id==0){
-				x=calcula(i);
-				close(fd[0]);
-				write(fd[1], &x, sizeof (Elemento));
+				x=calcula(linha);
+				close(fd[linha][0]);
+				write(fd[linha][1], &x, sizeof (Elemento));
 				exit(0);
 				
 			}
 			
 		}
 		
-		if( id != 0 ) for (i=0;i<dimensao2;i++) wait();
+		if( id != 0 ) for (linha=0;linha<dimensao2;linha++) wait();
 		else kill(getpid(), SIGKILL);
 		
 		//soh o pai acessa essa area de Codigo, os filhos ja retornaram ou morreram
 
-		for (i=0;i<dimensao2;i++){
-			close(fd[1]);                     /* close the `write' pipe */
-			read(fd[0], &x, sizeof (Elemento));    /* read an integer        */
+		for (linha=0;linha<dimensao;linha++){
+			close(fd[linha][1]);                     /* close the `write' pipe */
+			read(fd[linha][0], &x, sizeof (Elemento));    /* read an integer        */
 			printf("\n%i %i %i\n", x.linha,x.coluna,x.valor);
 
-			matrizResultado[x.linha][x.coluna]=x.valor;
+			matrizResultado[linha][x.coluna%dimensao]=x.valor;
 		}
 }
