@@ -175,7 +175,7 @@ void* calcula(void* arg){
 		} 
 		matrizResultado[linha][coluna]=acumula;
 		
-		printf("\n ## Thread=%i TID=%i Calculou=%i na posicao [%i,%i]",t,(int)gettid(),acumula,linha,coluna);
+		printf("\n ## Thread=%i TID=%i Calculou=%i para a posicao [%i,%i]",t,(int)gettid(),acumula,coluna,linha);
 
 }
 

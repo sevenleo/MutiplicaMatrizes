@@ -1,41 +1,48 @@
+//#include <linux/unistd.h>
+#include <sys/syscall.h>
+//#include <unistd.h>
 #include	<stdio.h>
-#include	<wait.h>
+//#include	<wait.h>
 #include 	<stdlib.h>
 #include 	<time.h>
+//#include	<sys/types.h>
 #include	<sys/timeb.h>
-#include	<sys/types.h>
-#include 	<signal.h>
+#include <signal.h>
 #define BASE 100
-	
-	//FUNCOES
-	void preenche(int **matriz,int semente);
-	void imprime (int **matriz);
-	void multiplica(int **mat1,int **mat2);
-	void gerasite(int **matrizA,int **matrizB);
-   
-	//PRE-DEFINIDO
-	int dimensao;
-	int pai;
-	
-	//cria matriz de saida
-	int **matrizResultado;	
-   
-   
-int main(void){
-	
-		int **matrizA;
-		int **matrizB;
-		int i,j;
-		
 
-		printf("\nQual a dimensao N (NxN) de suas matrizes?\n");
-		scanf("%i",&dimensao); 
-		//dimensao=2;
-		printf("\nOK, dimensao = %i\n",dimensao);
+//PRE-DEFINIDOS
+int dimensao;
+int pai;
+int temp=0;
+
+
+//cria matrizes
+int **matrizA;
+int **matrizB;
+int **matrizResultado;
+
+//funcoes
+pid_t gettid( void ) ;
+void gerasite(int **matrizA,int **matrizB);
+void preenche(int **matriz,int semente);
+void imprime (int **matriz);
+void calcula (int t);
+void multiplica(int **mat1,int **mat2);
+
+
+//////////////////////////////////////////////////////
+	
+int main(void){
 		
-		//PAI
-		pai=getpid();
-		printf ("\nO processo pai se chama: %i\n",pai);
+		//variaveis de tempo
+		struct timeb start, stop;
+		double elapsed;
+
+
+		int i;
+		printf("\nQual a dimensao N (NxN) de suas matrizes?\n");
+		scanf("%i",&dimensao);
+		printf("\nOK, dimensao = %i\n",dimensao);
 
 
 		//Cria matrizes 
@@ -52,35 +59,37 @@ int main(void){
 		preenche(matrizA,time(NULL));
 		preenche(matrizB,time(NULL)+1);
 		
-		
-
-		
-		
-		//SUBPROCESSOS CALCULAM A MULTIPLICACAO
+		//THREADS CALCULAM A MULTIPLICACAO
+		ftime(&start);					//inicia timer
 		multiplica(matrizA,matrizB);
+		ftime(&stop);					//para timer
+		elapsed=((double) stop.time + ((double) stop.millitm * 0.001)) - ((double) start.time + ((double) start.millitm * 0.001));
 		
-		
-		//imprime 
+		//IMPRIME
 		printf ("\nMatriz A:");
 		imprime(matrizA);
 		printf ("\nMatriz B:");
 		imprime(matrizB);
-		printf ("\nMatriz A*B:");
+		printf ("\n-Resultado:");
 		imprime(matrizResultado);
 		
 		//gera link
 		gerasite(matrizA,matrizB);
-			
 		
-		printf("=============================================== \n");
+		printf("\n -> O tempo de execucao e de %.3lf \n", elapsed);
 
-		
-    exit(0);
-	return 0;
+			
+
+		printf("\n =============================================== \n");
+
+		//exit(0);
+		return 0;
 }
 
+//////////////////////////////////////////////////////
 
-	void preenche(int **matriz,int semente){
+
+void preenche(int **matriz,int semente){
 	   int i,j,temp;
 	    srand(semente);
 	    
@@ -94,7 +103,7 @@ int main(void){
 		}
    }
 
-	void imprime (int **matriz){
+void imprime (int **matriz){
 		int i,j;
 		printf ("\n");
 		for (j=0;j<dimensao;j++) {
@@ -105,116 +114,9 @@ int main(void){
 		}
 		
 		
-	}
-	
-	/*
-	void multiplica(int **mat1,int **mat2){
-		//var
-		int acumula=0;
-		int linha,coluna,k,i,j;
-		int pid=getpid();
-		int pid=1;
-		int countsp=0; //conta subprocessos
-		
-		//var tempo
-		struct timeb start, stop;
-		double elapsed;
+}
 
-		
-		//contagem do tempo
-		ftime(&start);
-			
-		
-		//calcula
-		for (linha=0;linha<dimensao;linha++){
-			
-			for (coluna=0;coluna<dimensao;coluna++){
-				
-				if (pid!=0){ //cria filhos
-					countsp++;
-					pid=fork();
-				}
-				if (pid==0){ //filhos continuam
-				
-						matrizResultado[linha][coluna]=0;
-						//acumula=0; 
-						
-						
-							for (k=0;k<dimensao;k++){
-									matrizResultado[linha][coluna]+=mat1[k][coluna]*mat2[linha][k];
-									
-							} 
-							acumula=matrizResultado[linha][coluna];
-						
-							printf("\n--M=%i  SP-> %i",acumula, getpid());
-							//matrizResultado[linha][coluna]=acumula;
-						
-				}
-
-				
-
-			}
-			
-		}
-		
-
-		if (pid!=0) for (k=1;k<countsp;k++) wait(NULL);
-		else kill(getpid(), SIGKILL);
-		
-		
-		
-		ftime(&stop);
-		
-
-		printf ("\nResultado:\n\n");
-		imprime(matrizResultado);
-		
-		elapsed=((double) stop.time + ((double) stop.millitm * 0.001)) - ((double) start.time + ((double) start.millitm * 0.001));
-		printf("\n -> O tempo de execucao e de %.3lf \n", elapsed);
-		
-	}*/
-	
-	void multiplica(int **mat1,int **mat2){
-			int sp,pid,p,lin,col,k,status,x=0;
-			
-			//criar sp
-			sp=-1;
-			pid=getpid();
-			for(p=0;p<dimensao*dimensao;p++){
-					if (pid!=0) {
-							sp++;							
-							pid=fork();
-						}
-					else break;
-			}
-			x++;							
-			printf("\n\t\t x=%i PID=%i",x,pid);
-							 
-
-			//calcula
-			if (pid==0) {
-					lin=(int)(sp/dimensao);
-					col=sp%dimensao;
-					
-					matrizResultado[lin][col]=0;
-					for (k=0;k<dimensao;k++){
-							matrizResultado[lin][col]+=mat1[k][col]*mat2[lin][k];
-					}
-					
-			}
-			//mata sp
-			for(p=dimensao*dimensao;p>0;p--){
-					if (pid!=0) {
-							sp--;
-							wait(&status);
-						}
-					else kill(getpid(), SIGKILL);
-			}
-			
-			
-	}
-
-	void gerasite(int **matrizA,int **matrizB){
+void gerasite(int **matrizA,int **matrizB){
 			int i,j;
 			
 			printf ("\n  google-chrome ' http://www.wolframalpha.com/input/?i=");
@@ -243,5 +145,39 @@ int main(void){
 				else printf ("},");
 			}
 			printf ("}'\n");
+}
+	
+void calcula(int t){
+		int linha,coluna,acumula,k;
+		linha=(int)(t/dimensao);
+		coluna=t%dimensao;
+		acumula=0;
+		for (k=0;k<dimensao;k++){
+								acumula=acumula+matrizA[k][coluna]*matrizB[linha][k]; 
+		} 
+		matrizResultado[linha][coluna]=acumula;
+		
+		printf("\n ## Sub=%i PID=%i Encontrou=%i para a posicao [%i,%i]",t,(int)getpid(),acumula,linha,coluna);
+		exit(0);
+}
+
+void multiplica(int **mat1,int **mat2){
+	
+		int i,rc,acumula;
+		int dimensao2=dimensao*dimensao;
+		int id=1;
+		
+		for (i=0;i<dimensao2;i++){
+			if (id!=0){
+				id=fork();
+			}
+			if (id==0){
+				calcula(i);
+			}
+			
 		}
-   
+		
+		if( id != 0 ) for (i=0;i<dimensao2;i++) wait();
+		else kill(getpid(), SIGKILL);
+
+}
