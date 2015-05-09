@@ -32,7 +32,6 @@ pid_t gettid( void ) ;
 void gerasite(int **matrizA,int **matrizB);
 void preenche(int **matriz,int semente);
 void imprime (int **matriz);
-Elemento calcula (int t);
 void multiplica(int **mat1,int **mat2);
 
 
@@ -68,18 +67,20 @@ int main( int argc, char *argv[ ] ){
 		//PREENCHE MATRIZ 
 		preenche(matrizA,time(NULL));
 		preenche(matrizB,time(NULL)+1);
-		
+
+
 		//THREADS CALCULAM A MULTIPLICACAO
-		ftime(&start);					//inicia timer
+		//ftime(&start);					//inicia timer
 		multiplica(matrizA,matrizB);
-		ftime(&stop);					//para timer
+		//ftime(&stop);					//para timer
 		elapsed=((double) stop.time + ((double) stop.millitm * 0.001)) - ((double) start.time + ((double) start.millitm * 0.001));
-		
+	
+		/*
 		//IMPRIME
 		printf ("\nMatriz A:");
 		imprime(matrizA);
 		printf ("\nMatriz B:");
-		imprime(matrizB);
+		imprime(matrizB);*/
 		printf ("\n-Resultado:");
 		imprime(matrizResultado);
 		
@@ -153,67 +154,58 @@ void gerasite(int **matrizA,int **matrizB){
 			printf ("}'\n");
 }
 	
-Elemento calcula(int t){
 
-		Elemento resposta;
-		int linha,coluna,acumula,k;
-		linha=t;
-		for (coluna=0;coluna<dimensao;coluna++){
-				acumula=0;
-				for (k=0;k<dimensao;k++){
-								acumula=acumula+matrizA[k][coluna]*matrizB[linha][k]; 
-				} 
-				//matrizResultado[linha][coluna]=acumula;
-				
-				resposta.coluna=coluna;
-				resposta.linha=linha;
-				resposta.valor=acumula;
-				
-				//printf("\n ## Sub=%i PID=%i Encontrou=%i para a posicao [%i,%i]",t,(int)getpid(),acumula,linha,coluna);
-
-				
-		}
-		return resposta;
-		//exit(0);
-		
-}
 
 void multiplica(int **mat1,int **mat2){
 	
-		int linha,coluna,rc,acumula;
+		int linha,coluna,acumula,i,k;
 		int dimensao2=dimensao*dimensao;
 		int id=1;
-		int n=0;
-		Elemento x;
-		int fd[dimensao][2];
-			if (pipe(fd)){                         /* create pipe            */
+		int fd[2];
+		
+		if (pipe(fd)){                      
 			fprintf(stderr, "pipe error\n");
 			exit(-1);
 		}
+
 		for (linha=0;linha<dimensao;linha++){
 			if (id!=0){
 				id=fork();
 			}
 			if (id==0){
-				x=calcula(linha);
-				close(fd[linha][0]);
-				write(fd[linha][1], &x, sizeof (Elemento));
-				exit(0);
-				
+					//fecha escrita para ler//causando starvation
+					//close(fd[1]);                   
+					//read(fd[0], &matrizResultado, sizeof (int **));
+					
+					for (coluna=0;coluna<dimensao;coluna++){
+							acumula=0;
+							for (k=0;k<dimensao;k++){
+											acumula=acumula+matrizA[k][coluna]*matrizB[i][k]; 
+							} 
+							matrizResultado[i][coluna]=acumula;
+							printf("\n ## PID=%i Encontrou=%i para a posicao [%i,%i]",(int)getpid(),acumula,i,coluna);
+							
+					}
+							
+					//fecha leitura para escrever
+					printf("\n ###### PID=%i :",(int)getpid()); //ptintar matriz obtida para avaliacao
+					imprime(matrizResultado);
+					close(fd[0]);
+					write(fd[1], &matrizResultado, sizeof (int **));				
+					
+					exit(0);
+
 			}
 			
 		}
 		
-		if( id != 0 ) for (linha=0;linha<dimensao2;linha++) wait();
+		if( id != 0 ) for (linha=0;linha<dimensao2;linha++) {
+			wait();
+		}
 		else kill(getpid(), SIGKILL);
 		
 		//soh o pai acessa essa area de Codigo, os filhos ja retornaram ou morreram
-
-		for (linha=0;linha<dimensao;linha++){
-			close(fd[linha][1]);                     /* close the `write' pipe */
-			read(fd[linha][0], &x, sizeof (Elemento));    /* read an integer        */
-			printf("\n%i %i %i\n", x.linha,x.coluna,x.valor);
-
-			matrizResultado[linha][x.coluna%dimensao]=x.valor;
-		}
+		close(fd[1]);                   
+		read(fd[0], &matrizResultado, sizeof (int **));
+				
 }

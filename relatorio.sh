@@ -16,4 +16,3 @@
 ./threads	100
 ./threads	200
 ./threads	500
-
