@@ -1,4 +1,5 @@
 //Leonardo Neves da Silva DRE110155777 
+//Luan Cerqueira Martins  DRE111211704
 //T1 SO 2015.1 ProfValeria
 
 #include	<stdio.h>
@@ -34,6 +35,7 @@ void preenche(int **matriz,int semente);
 void imprime (int **matriz);
 void multiplica(int **mat1,int **mat2);
 
+int fd[2];
 
 //////////////////////////////////////////////////////
 	
@@ -52,7 +54,11 @@ int main( int argc, char *argv[ ] ){
 			scanf("%i",&dimensao);
 		}
 
-
+        // Inicializa o Pipe
+        if (pipe(fd)){                      
+        	fprintf(stderr, "pipe error\n");
+        	exit(-1);
+        }
 
 		//Cria matrizes 
 		if (dimensao<=0 ) return -1;
@@ -161,12 +167,6 @@ void multiplica(int **mat1,int **mat2){
 		int linha,coluna,acumula,i,k;
 		int dimensao2=dimensao*dimensao;
 		int id=1;
-		int fd[2];
-		
-		if (pipe(fd)){                      
-			fprintf(stderr, "pipe error\n");
-			exit(-1);
-		}
 
 		for (linha=0;linha<dimensao;linha++){
 			if (id!=0){
@@ -180,10 +180,10 @@ void multiplica(int **mat1,int **mat2){
 					for (coluna=0;coluna<dimensao;coluna++){
 							acumula=0;
 							for (k=0;k<dimensao;k++){
-											acumula=acumula+matrizA[k][coluna]*matrizB[i][k]; 
+											acumula=acumula+mat1[k][coluna]*mat2[linha][k]; 
 							} 
-							matrizResultado[i][coluna]=acumula;
-							printf("\n ## PID=%i Encontrou=%i para a posicao [%i,%i]",(int)getpid(),acumula,i,coluna);
+							matrizResultado[linha][coluna]=acumula;
+							printf("\n ## PID=%i Encontrou=%i para a posicao [%i,%i]",(int)getpid(),acumula,linha,coluna);
 							
 					}
 							
@@ -191,7 +191,7 @@ void multiplica(int **mat1,int **mat2){
 					printf("\n ###### PID=%i :",(int)getpid()); //ptintar matriz obtida para avaliacao
 					imprime(matrizResultado);
 					close(fd[0]);
-					write(fd[1], &matrizResultado, sizeof (int **));				
+					write(fd[1], &matrizResultado, sizeof (int **) * dimensao * dimensao);				
 					
 					exit(0);
 
@@ -205,7 +205,8 @@ void multiplica(int **mat1,int **mat2){
 		else kill(getpid(), SIGKILL);
 		
 		//soh o pai acessa essa area de Codigo, os filhos ja retornaram ou morreram
-		close(fd[1]);                   
-		read(fd[0], &matrizResultado, sizeof (int **));
+		close(fd[1]);
+		
+		read(fd[0], &matrizResultado, sizeof (int **) * dimensao * dimensao);
 				
 }
