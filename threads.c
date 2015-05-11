@@ -78,7 +78,7 @@ int main( int argc, char *argv[ ] ){
 		elapsed=((double) stop.time + ((double) stop.millitm * 0.001)) - ((double) start.time + ((double) start.millitm * 0.001));
 		
 		//IMPRIME
-		/*printf ("\nMatriz A:");
+		printf ("\nMatriz A:");
 		imprime(matrizA);
 		printf ("\nMatriz B:");
 		imprime(matrizB);
@@ -87,7 +87,7 @@ int main( int argc, char *argv[ ] ){
 		
 		//gera link
 		gerasite(matrizA,matrizB);
-		*/
+		
 				printf("\n[Threads=%i] Matrizes = %i x %i -> O tempo de execucao e de %.3lf\n",dimensao, dimensao, dimensao,elapsed);
 
 		
@@ -171,7 +171,7 @@ void* calcula(void* arg){
 			matrizResultado[linha][coluna]=acumula;
 			
 			
-			//printf("\n ## Thread=%i TID=%i Calculou=%i para a posicao [%i,%i]",t,(int)gettid(),acumula,coluna,linha);
+			printf("\n ## Thread=%i TID=%i Calculou=%i para a posicao [%i,%i]",t,(int)gettid(),acumula,coluna,linha);
 		}
 }
 

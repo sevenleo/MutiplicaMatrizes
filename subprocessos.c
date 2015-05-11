@@ -75,7 +75,7 @@ int main( int argc, char *argv[ ] ){
 		elapsed=((double) stop.time + ((double) stop.millitm * 0.001)) - ((double) start.time + ((double) start.millitm * 0.001));
 		
 		//IMPRIME
-		/*printf ("\nMatriz A:");
+		printf ("\nMatriz A:");
 		imprime(matrizA);
 		printf ("\nMatriz B:");
 		imprime(matrizB);
@@ -84,7 +84,7 @@ int main( int argc, char *argv[ ] ){
 		
 		//gera link
 		gerasite(matrizA,matrizB);
-		*/
+		
 		printf("\n[1 arquivo  e Subprocessos =%i]  Matrizes = %i x %i -> O tempo de execucao e de %.3lf\n",dimensao, dimensao, dimensao,elapsed);
 
 		//exit(0);
@@ -168,7 +168,7 @@ Elemento calcula(int t){
 				resposta.linha=linha;
 				resposta.valor=acumula;
 				
-				//printf("\n ## Sub=%i PID=%i Encontrou=%i para a posicao [%i,%i]",t,(int)getpid(),acumula,linha,coluna);
+				printf("\n ## Sub=%i PID=%i Encontrou=%i para a posicao [%i,%i]",t,(int)getpid(),acumula,linha,coluna);
 				arq = fopen("dadossubprocessos.txt", "a");
 				fprintf(arq,"%i %i \t%i\n", resposta.linha,resposta.coluna,resposta.valor);
 				fclose (arq);

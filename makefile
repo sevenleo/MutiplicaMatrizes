@@ -8,6 +8,7 @@ all:
 	@clear
 	@echo ____________________________________________________________________Executa
 	@echo Execute ./subprocessos ou ./threads ou ./simples
+
 	
 
 clean: 
