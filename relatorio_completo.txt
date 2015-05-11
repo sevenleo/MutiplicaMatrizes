@@ -1,48 +1,133 @@
-
 [ProcessoUnico] Matrizes = 3 x 3 -> O tempo de execucao e de 0.000
 
 [ProcessoUnico] Matrizes = 10 x 10 -> O tempo de execucao e de 0.000
 
 [ProcessoUnico] Matrizes = 50 x 50 -> O tempo de execucao e de 0.001
 
-[ProcessoUnico] Matrizes = 100 x 100 -> O tempo de execucao e de 0.008
+[ProcessoUnico] Matrizes = 100 x 100 -> O tempo de execucao e de 0.012
 
-[ProcessoUnico] Matrizes = 200 x 200 -> O tempo de execucao e de 0.063
+[ProcessoUnico] Matrizes = 200 x 200 -> O tempo de execucao e de 0.069
 
-[ProcessoUnico] Matrizes = 500 x 500 -> O tempo de execucao e de 1.161
+[ProcessoUnico] Matrizes = 500 x 500 -> O tempo de execucao e de 1.181
 
-[ProcessoUnico] Matrizes = 1000 x 1000 -> O tempo de execucao e de 15.920
+[ProcessoUnico] Matrizes = 1000 x 1000 -> O tempo de execucao e de 16.024
 
-[ProcessoUnico] Matrizes = 2000 x 2000 -> O tempo de execucao e de 138.466
+[ProcessoUnico] Matrizes = 2000 x 2000 -> O tempo de execucao e de 140.281
 
-[1arquivo  e Subprocessos =3] Matrizes = 3 x 3 -> O tempo de execucao e de 0.001
+[1 arquivo  e Subprocessos =3]  Matrizes = 3 x 3 -> O tempo de execucao e de 0.001
 
-[1arquivo  e Subprocessos =10] Matrizes = 10 x 10 -> O tempo de execucao e de 0.002
+[1 arquivo  e Subprocessos =10]  Matrizes = 10 x 10 -> O tempo de execucao e de 0.002
 
-[1arquivo  e Subprocessos =50] Matrizes = 50 x 50 -> O tempo de execucao e de 0.033
+[1 arquivo  e Subprocessos =50]  Matrizes = 50 x 50 -> O tempo de execucao e de 0.030
 
-[1arquivo  e Subprocessos =100] Matrizes = 100 x 100 -> O tempo de execucao e de 0.129
+[1 arquivo  e Subprocessos =100]  Matrizes = 100 x 100 -> O tempo de execucao e de 0.109
 
-[1arquivo  e Subprocessos =200] Matrizes = 200 x 200 -> O tempo de execucao e de 0.514
+[1 arquivo  e Subprocessos =200]  Matrizes = 200 x 200 -> O tempo de execucao e de 0.475
 
-[1arquivo  e Subprocessos =500] Matrizes = 500 x 500 -> O tempo de execucao e de 5.530
+[1 arquivo  e Subprocessos =500]  Matrizes = 500 x 500 -> O tempo de execucao e de 3.242
 
-[1arquivo  e Subprocessos =1000] Matrizes = 1000 x 1000 -> O tempo de execucao e de 33.599
+[1 arquivo  e Subprocessos =1000]  Matrizes = 1000 x 1000 -> O tempo de execucao e de 20.034
 
-[1arquivo  e Subprocessos =2000] Matrizes = 2000 x 2000 -> O tempo de execucao e de 203.942
+[1 arquivo  e Subprocessos =2000]  Matrizes = 2000 x 2000 -> O tempo de execucao e de 135.416
+
+[0* arquivo  e Subprocessos =3]  Matrizes = 3 x 3 -> O tempo de execucao e de 0.001
+
+[0* arquivo  e Subprocessos =10]  Matrizes = 10 x 10 -> O tempo de execucao e de 0.001
+
+[0* arquivo  e Subprocessos =50]  Matrizes = 50 x 50 -> O tempo de execucao e de 0.011
+
+[0* arquivo  e Subprocessos =100]  Matrizes = 100 x 100 -> O tempo de execucao e de 0.021
+
+[0* arquivo  e Subprocessos =200]  Matrizes = 200 x 200 -> O tempo de execucao e de 0.080
+
+[0* arquivo  e Subprocessos =500]  Matrizes = 500 x 500 -> O tempo de execucao e de 0.893
+
+[0* arquivo  e Subprocessos =1000]  Matrizes = 1000 x 1000 -> O tempo de execucao e de 9.794
+
+[0* arquivo  e Subprocessos =2000]  Matrizes = 2000 x 2000 -> O tempo de execucao e de 81.975
 
 [Threads=3] Matrizes = 3 x 3 -> O tempo de execucao e de 0.000
 
 [Threads=10] Matrizes = 10 x 10 -> O tempo de execucao e de 0.000
 
-[Threads=50] Matrizes = 50 x 50 -> O tempo de execucao e de 0.004
+[Threads=50] Matrizes = 50 x 50 -> O tempo de execucao e de 0.005
 
-[Threads=100] Matrizes = 100 x 100 -> O tempo de execucao e de 0.007
+[Threads=100] Matrizes = 100 x 100 -> O tempo de execucao e de 0.008
 
-[Threads=200] Matrizes = 200 x 200 -> O tempo de execucao e de 0.037
+[Threads=200] Matrizes = 200 x 200 -> O tempo de execucao e de 0.045
 
-[Threads=500] Matrizes = 500 x 500 -> O tempo de execucao e de 0.596
+[Threads=500] Matrizes = 500 x 500 -> O tempo de execucao e de 0.655
 
-[Threads=1000] Matrizes = 1000 x 1000 -> O tempo de execucao e de 7.708
+[Threads=1000] Matrizes = 1000 x 1000 -> O tempo de execucao e de 8.446
 
-[Threads=2000] Matrizes = 2000 x 2000 -> O tempo de execucao e de 72.516
+[Threads=2000] Matrizes = 2000 x 2000 -> O tempo de execucao e de 52.285
+
+
+
+
+
+
+
+
+Metodo \ Dimensao
+3
+10
+50
+100
+200
+500
+1000
+2000
+Processo unico
+0.000
+0.000
+0.001
+0.012
+0.069
+1.181
+16.024
+140.281
+Subprocessos
+com arquivo
+0.001
+0.002
+0.030
+0.109
+ 0.475
+3.242
+20.034
+135.416
+Subprocessos
+sem arquivo
+0.001
+0.001
+0.011
+0.021
+0.080
+0.893
+9.794
+81.975
+Threads
+0.000
+
+
+ 0.000
+
+
+0.005
+
+
+ 0.008
+
+
+ 0.045
+
+
+0.655
+
+
+ 8.446
+ 52.285
+
+
+

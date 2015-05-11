@@ -85,7 +85,7 @@ int main( int argc, char *argv[ ] ){
 		//gera link
 		gerasite(matrizA,matrizB);
 		*/
-		printf("\n[Subprocessos=%i] Matrizes = %i x %i -> O tempo de execucao e de %.3lf\n",dimensao, dimensao, dimensao,elapsed);
+		printf("\n[1 arquivo  e Subprocessos =%i]  Matrizes = %i x %i -> O tempo de execucao e de %.3lf\n",dimensao, dimensao, dimensao,elapsed);
 
 		//exit(0);
 		return 0;

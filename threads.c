@@ -1,7 +1,7 @@
 //Leonardo Neves da Silva DRE110155777 
 //T1 SO 2015.1 ProfValeria
 
-//#include <sys/syscall.h> ///////////USAR APENAS NO LINUX
+#include <sys/syscall.h> ///////////USAR APENAS NO LINUX
 #include	<stdio.h>
 #include 	<stdlib.h>
 #include 	<time.h>
@@ -30,7 +30,7 @@ int **matrizB;
 int **matrizResultado;
 
 //funcoes
-//pid_t gettid( void ) ;     ///////////USAR APENAS NO LINUX
+pid_t gettid( void ) ;     ///////////USAR APENAS NO LINUX
 void gerasite(int **matrizA,int **matrizB);
 void preenche(int **matriz,int semente);
 void imprime (int **matriz);
@@ -98,7 +98,7 @@ int main( int argc, char *argv[ ] ){
 //////////////////////////////////////////////////////
 
 
-//pid_t gettid( void ) { return syscall( __NR_gettid );}  ///////////USAR APENAS NO LINUX
+pid_t gettid( void ) { return syscall( __NR_gettid );}  ///////////USAR APENAS NO LINUX
 
 void preenche(int **matriz,int semente){
 	   int i,j,temp;

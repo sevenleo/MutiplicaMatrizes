@@ -8,8 +8,7 @@ all:
 	@clear
 	@echo ____________________________________________________________________Executa
 	@echo Execute ./subprocessos ou ./threads ou ./simples
-	sh relatorio.sh > relatorio.txt
-	gedit relatorio.txt
+	
 
 clean: 
 	rm a.out 
